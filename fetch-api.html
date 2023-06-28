@@ -11,7 +11,8 @@
     // let url = "http://localhost/api_crud/get.php?apikey=f18d10509de2dba81ff22ae1adbf6019";
     // fetch(url).then(x=>x.text()).then(y=>document.getElementById('datas').innerHTML=y);
 
-    let url = fetch("http://localhost/api_crud/get.php?apikey=f18d10509de2dba81ff22ae1adbf6019")
+    // let url = fetch("http://localhost/api_crud/get.php?apikey=f18d10509de2dba81ff22ae1adbf6019")
+    let url = fetch("response.json")
     url.then((response)=>{
         console.log(response);
         return response.json();
