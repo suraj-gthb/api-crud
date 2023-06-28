@@ -1,0 +1,36 @@
+{
+    "Status": true,
+    "message": "Number of student(s) found: 5",
+    "Students": [
+        {
+            "id": "3",
+            "name": "Suraj Shimage",
+            "email": "suraj.shimage08@gmail.com",
+            "mobile": "8411899901"
+        },
+        {
+            "id": "4",
+            "name": "Abhishek Vidap",
+            "email": "abhishekvidap22@gmail.com",
+            "mobile": "9763972374"
+        },
+        {
+            "id": "5",
+            "name": "Abhishek Dasari",
+            "email": "abhishekdasari31@gmail.com",
+            "mobile": "8411899901"
+        },
+        {
+            "id": "6",
+            "name": "Prasad Rodage",
+            "email": "prodage984@gmail.com",
+            "mobile": "8855921085"
+        },
+        {
+            "id": "7",
+            "name": "Gaurav Gurram",
+            "email": "gauravgurram2000@gmail.com",
+            "mobile": "8421789223"
+        }
+    ]
+}

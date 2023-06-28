@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch API</title>
+</head>
+<body>
+    <div id="datas"></div>
+<script>
+    // let url = "http://localhost/api_crud/get.php?apikey=f18d10509de2dba81ff22ae1adbf6019";
+    // fetch(url).then(x=>x.text()).then(y=>document.getElementById('datas').innerHTML=y);
+
+    let url = fetch("http://localhost/api_crud/get.php?apikey=f18d10509de2dba81ff22ae1adbf6019")
+    url.then((response)=>{
+        console.log(response);
+        return response.json();
+    }).then((response1)=>{
+        // console.table(response1);
+        // console.log(response1.Students[0].name);
+        for(i in response1.Students){
+            console.log(response1.Students[i].name);
+        }
+        //return response1;
+    });
+
+</script>
+</body>
+</html>

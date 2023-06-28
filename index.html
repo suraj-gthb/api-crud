@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Get Data</title>
+    <style>
+      .error {
+        color: #da2600;
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+      integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+      integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"
+      integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://kit.fontawesome.com/e77773989a.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row my-5">
+        <h5 class="alert alert-info text-center">
+          CRUD Student Data Using JQuery & Ajax With API
+        </h5>
+        <div class="col-12 col-md-12 col-lg-4 mb-3">
+          <div class="p-3 border rounded shadow-sm">
+            <form method="post" id="insert_frm">
+              <div class="form-group mb-3">
+                <label for="">Name</label
+                ><input
+                  type="text"
+                  name="name"
+                  id="name"
+                  class="form-control"
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="">Email</label
+                ><input
+                  type="text"
+                  name="email"
+                  id="email"
+                  class="form-control"
+                />
+              </div>
+              <div class="form-group mb-3">
+                <label for="">Mobile</label
+                ><input
+                  type="text"
+                  name="mobile"
+                  id="mobile"
+                  class="form-control"
+                />
+              </div>
+              <div class="form-group mb-3">
+                <button type="submit" class="btn btn-success" id="add">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-12 col-md-12 col-lg-8">
+          <div class="p-3 border rounded shadow-sm overflow-auto">
+            <div class="alert py-1" id="message_sts"></div>
+            <div class="row">
+              <div class="col-12 col-md-7">
+                <label for="">Enter API Key</label
+                ><input
+                  type="text"
+                  id="apikey"
+                  class="form-control"
+                  value="f18d10509de2dba81ff22ae1adbf6019"
+                />
+              </div>
+              <div class="col-12 col-md-5">
+                <div class="form-grou mt-md-4 mt-1">
+                  <button class="btn btn-success" id="get-data">
+                    Get Data
+                  </button>
+                  &nbsp;
+                  <a href="generate-apikey.php" class="btn btn-info"
+                    >Generate API Key</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="d-flex my-2">
+              <div class="form-group w-75">
+                <label for="">Search Data</label
+                ><input type="text" id="search" class="form-control" />
+              </div>
+              &nbsp;
+              <div class="form-group">
+                <br /><button class="btn btn-warning" id="get-search-data">
+                  <i class="fa-solid fa-search"></i>
+                </button>
+              </div>
+            </div>
+            <table class="table table-bordered text-nowrap">
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th class="text-center">Action</th>
+              </tr>
+              <tbody id="stud-data"></tbody>
+              <script>
+                $(document).ready(function () {
+
+
+                  let apikey = $("#apikey").val();
+                  $("#insert_frm").validate({
+                    rules: {
+                      name: "required",
+                      email: "required",
+                      mobile: "required",
+                    },
+                    messages: {
+                      name: "Please enter your name",
+                      email: "Please enter your email",
+                      mobile: "Please enter your mobile",
+                    },
+                    submitHander: function (form) {
+                      form.submit();
+                    }
+                  });
+
+                  $("#add").on("click", function (event) {
+                        event.preventDefault();
+                        let name = $("#name").val();
+                        let email = $("#email").val();
+                        let mobile = $("#mobile").val();
+                        $.ajax({
+                          url: "http://localhost/api_crud/insert.php",
+                          type: "post",
+                          data: {
+                            name: name,
+                            email: email,
+                            mobile: mobile,
+                          },
+                          success: function (data) {
+                            alert(data.Message);
+                            // $('#message_sts').show().addClass('alert-success').html(data.Message);
+                            getData(apikey);
+                          },
+                        });
+                      });
+
+                  $("#message_sts").hide();
+                  $("#get-data").click(function () {
+                    let apikey = $("#apikey").val();
+                    getData(apikey);
+                  });
+                  function getData(apikey) {
+                    $.ajax({
+                      url: "http://localhost/api_crud/get.php?apikey=" + apikey,
+                      type: "get",
+                      dataType: "json",
+                      success: function (data) {
+                        if (data.Code == 0) {
+                          $("#message_sts")
+                            .show()
+                            .addClass("alert-danger")
+                            .html(data.Message);
+                        } else if (data.Code == 1) {
+                          $("#message_sts")
+                            .show()
+                            .addClass("alert-danger")
+                            .html(data.Message);
+                          $("#stud-data").html("");
+                        } else {
+                          $("#message_sts").hide();
+                          $("#stud-data").html("");
+                          let count = 1;
+                          for (var i = 0; i < data.Students.length; i++) {
+                            $("#stud-data").append(
+                              "<tr><td>" +
+                                count++ +
+                                "</td><td>" +
+                                data.Students[i].name +
+                                "</td><td>" +
+                                data.Students[i].email +
+                                "</td><td>" +
+                                data.Students[i].mobile +
+                                "</td><td><button class='btn btn-sm btn-warning edt-btn' data-id='" +
+                                data.Students[i].id +
+                                "'><i class='fa-solid fa-pen-to-square'></i></button>&nbsp;<button class='btn btn-sm btn-danger del-btn' data-id='" +
+                                data.Students[i].id +
+                                "'><i class='fa-solid fa-trash-alt'></i></button></td></tr>"
+                            );
+                          }
+                        }
+                      },
+                    });
+                  }
+
+                  $(document).on("click", ".del-btn", function () {
+                    var btn = $(this);
+                    var r_id = btn.data("id");
+                    $.ajax({
+                      url: "http://localhost/api_crud/delete.php",
+                      type: "post",
+                      data: {
+                        id: r_id,
+                      },
+                      beforeSend: function () {
+                        $(btn)
+                          .html('<i class="fa-solid fa-spinner fa-spin">')
+                          .addClass("btn btn-secondary")
+                          .attr("disabled", "disabled");
+                      },
+                      success: function (data) {
+                        //alert(JSON.stringify(data));
+                        $("#message_sts")
+                          .show()
+                          .addClass("alert-success")
+                          .html(data.Message);
+                          getData(apikey);
+                      },
+                    });
+                  });
+
+                  $(document).on("click", ".edt-btn", function () {
+                    var btn = $(this);
+                    var r_id = btn.data("id");
+                    $.ajax({
+                      url: "http://localhost/api_crud/find-data.php?id=" + r_id,
+                      type: "get",
+                      success: function (data) {
+                        //alert(JSON.stringify(data));
+                        if (data.Status) {
+                          $("#editModal").modal("show");
+                          $("#editModal #id").val(data.Student.id);
+                          $("#editModal #name").val(data.Student.name);
+                          $("#editModal #email").val(data.Student.email);
+                          $("#editModal #mobile").val(data.Student.mobile);
+                        }
+                      },
+                    });
+                  });
+
+                  $("#update").on("click", function () {
+                    let id = $("#editModal #id").val();
+                    let name = $("#editModal #name").val();
+                    let email = $("#editModal #email").val();
+                    let mobile = $("#editModal #mobile").val();
+                    $.ajax({
+                      url: "http://localhost/api_crud/update.php",
+                      type: "post",
+                      data: {
+                        id: id,
+                        name: name,
+                        email: email,
+                        mobile: mobile,
+                      },
+                      success: function (data) {
+                        $("#message_sts")
+                          .show()
+                          .addClass("alert-success")
+                          .html(data.Message);
+                        $("#editModal").modal("hide");
+                        getData(apikey);
+                      },
+                    });
+                  });
+
+                  $("#get-search-data").click(function () {
+                    let search_data = $("#search").val();
+                    $.ajax({
+                      url: "http://localhost/api_crud/get-single.php?search=" + search_data,
+                      type: "get",
+                      beforeSend: function () {
+                        $("#stud-data").html("Searching...");
+                      },
+                      success: function (data) {
+                        if (data.Status) {
+                          $("#stud-data").html("");
+                          let count = 1;
+                          for (var i = 0; i < data.Students.length; i++) {
+                            $("#stud-data").append(
+                              "<tr><td>" +
+                                count++ +
+                                "</td><td>" +
+                                data.Students[i].name +
+                                "</td><td>" +
+                                data.Students[i].email +
+                                "</td><td>" +
+                                data.Students[i].mobile +
+                                "</td><td><button class='btn btn-sm btn-warning edt-btn' data-id='" +
+                                data.Students[i].id +
+                                "'><i class='fa-solid fa-pen-to-square'></i></button>&nbsp;<button class='btn btn-sm btn-danger del-btn' data-id='" +
+                                data.Students[i].id +
+                                "'><i class='fa-solid fa-trash-alt'></i></button></td></tr>"
+                            );
+                          }
+                        } else {
+                          $("#stud-data").html(data.Message);
+                        }
+                      },
+                    });
+                  });
+                });
+              </script>
+            </table>
+
+            <!-- Modal -->
+            <div
+              class="modal fade"
+              id="editModal"
+              tabindex="-1"
+              aria-labelledby="editModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">
+                      Edit Student
+                    </h5>
+                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                  </div>
+                  <div class="modal-body">
+                    <input type="hidden" id="id" />
+                    <div class="form-group mb-3">
+                      <label for="">Name</label
+                      ><input
+                        type="text"
+                        name=""
+                        id="name"
+                        class="form-control"
+                      />
+                    </div>
+                    <div class="form-group mb-3">
+                      <label for="">Email</label
+                      ><input
+                        type="text"
+                        name=""
+                        id="email"
+                        class="form-control"
+                      />
+                    </div>
+                    <div class="form-group mb-3">
+                      <label for="">Mobile</label
+                      ><input
+                        type="text"
+                        name=""
+                        id="mobile"
+                        class="form-control"
+                      />
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button type="button" class="btn btn-primary" id="update">
+                      Save changes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- modal end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
